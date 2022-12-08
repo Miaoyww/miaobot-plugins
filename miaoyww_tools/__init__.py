@@ -41,5 +41,11 @@ async def update_handler(matcher: Matcher):
     logger.info("Update Done")
     os.remove(plugins_temp_path + ".zip")
     shutil.rmtree(f"{plugins_path}/plugins")
-    os.renames(f"{plugins_path}/miaobot-plugins-main", f"{plugins_path}/plugins")
+    while True:
+        try:
+            os.renames(f"{plugins_path}/miaobot-plugins-main", f"{plugins_path}/plugins")
+            break
+        except:
+            continue
+
     await matcher.send("插件已更新完毕.")
