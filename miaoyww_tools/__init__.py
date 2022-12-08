@@ -1,6 +1,4 @@
 from pathlib import Path
-
-import nonebot
 from nonebot import logger
 from nonebot.internal.matcher import Matcher
 from nonebot.plugin import on_command
@@ -41,11 +39,7 @@ async def update_handler(matcher: Matcher):
     file.extractall(plugins_path)
     file.close()
     logger.info("Update Done")
+    os.remove(plugins_temp_path + ".zip")
+    shutil.rmtree(f"{plugins_path}/plugins")
+    os.renames(f"{plugins_path}/miaobot-plugins-main", f"{plugins_path}/plugins")
     await matcher.send("插件已更新完毕.")
-
-    def callback(_plugins_path, _plugins_temp_path):
-        os.remove(_plugins_temp_path + ".zip")
-        remove_file(f"{_plugins_path}/miaobot-plugins-main", f"{_plugins_path}/plugins")
-        shutil.rmtree(f"{_plugins_path}/miaobot-plugins-main")
-
-    threading.Thread(target=callback, args=(plugins_path, plugins_temp_path)).start()
