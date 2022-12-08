@@ -33,6 +33,7 @@ def remove_file(old_path, new_path):
 
 @update.handle()
 async def update_handler(matcher: Matcher):
+    await matcher.send("正在更新插件.")
     plugins_path = Path(__file__).parent.parent.parent
     plugins_temp_path = f"{plugins_path}\\plugins_temp"
     if os.path.exists(plugins_temp_path):
@@ -49,11 +50,12 @@ async def update_handler(matcher: Matcher):
     file.extractall(plugins_path)
     file.close()
     logger.info("Update Done")
+    await matcher.send("插件已更新完毕.")
 
     def callback():
         os.remove(plugins_temp_path + ".zip")
-        del_files(f"{plugins_path}\\plugins")
-        remove_file(f"{plugins_path}\\miaobot-plugins-main", f"{plugins_path}\\plugins")
-        del_files(f"{plugins_path}\\miaobot-plugins-main")
+        del_files(f"{plugins_path}/plugins")
+        remove_file(f"{plugins_path}/miaobot-plugins-main", f"{plugins_path}/plugins")
+        del_files(f"{plugins_path}/miaobot-plugins-main")
 
     threading.Thread(callback()).start()

@@ -36,7 +36,6 @@ async def _handle(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg(
         await bot.send_group_msg(group_id=event.group_id, message=f"[CQ:at,qq={event.user_id}] 你输入的内容有误",
                                  auto_escape=False)
         return
-    logger.debug(buffer)
     if bvid in buffer:
         if time.time() - buffer[bvid] < 20:
             logger.debug(f"{bvid}的请求被拒绝，短时间内请求过量")
@@ -86,7 +85,7 @@ async def _handle(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg(
                   f"{'w' if video_info['coin'] > 10000 else ''}硬币 · " \
                   f"{Decimal(video_info['favorite'] / 10000).quantize(Decimal('0.0')) if video_info['favorite'] > 10000 else video_info['favorite']}" \
                   f"{'w' if video_info['favorite'] > 10000 else ''}收藏"
-    text = f"https://www.bilibili.com/video/{bvid}" \
+    text = f"https://www.bilibili.com/video/{bvid}\n" \
            f"————标题———— \n{video_info['title']}\n" \
            f"————UP主———— \n{video_info['owner']} ({video_info['upload_time']}上传 -时长: {video_info['duration']})\n" \
            f"————信息———— \n{detail_text}\n" \
