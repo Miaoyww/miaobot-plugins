@@ -47,5 +47,4 @@ async def update_handler(matcher: Matcher):
             break
         except:
             continue
-
     await matcher.send("插件已更新完毕.")
