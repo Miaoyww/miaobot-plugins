@@ -1,4 +1,6 @@
 from pathlib import Path
+
+import nonebot
 from nonebot import logger
 from nonebot.internal.matcher import Matcher
 from nonebot.plugin import on_command
@@ -10,17 +12,6 @@ import zipfile
 import threading
 
 update = on_command("upd", aliases={"更新", "update"}, permission=SUPERUSER)
-
-
-def del_files(path_file):
-    file_list = os.listdir(path_file)
-    for item in file_list:
-        f_path = os.path.join(path_file, item)
-        if os.path.isdir(f_path):
-            del_files(f_path)
-            os.rmdir(f_path)
-        else:
-            os.remove(f_path)
 
 
 def remove_file(old_path, new_path):
@@ -37,7 +28,7 @@ async def update_handler(matcher: Matcher):
     plugins_path = Path(__file__).parent.parent.parent
     plugins_temp_path = f"{plugins_path}\\plugins_temp"
     if os.path.exists(plugins_temp_path):
-        del_files(plugins_temp_path)
+        shutil.rmtree(plugins_temp_path)
     logger.info("开始获取插件压缩包")
     if os.path.exists(plugins_temp_path + ".zip"):
         os.remove(plugins_temp_path + ".zip")
@@ -52,10 +43,9 @@ async def update_handler(matcher: Matcher):
     logger.info("Update Done")
     await matcher.send("插件已更新完毕.")
 
-    def callback():
-        os.remove(plugins_temp_path + ".zip")
-        del_files(f"{plugins_path}/plugins")
-        remove_file(f"{plugins_path}/miaobot-plugins-main", f"{plugins_path}/plugins")
-        del_files(f"{plugins_path}/miaobot-plugins-main")
+    def callback(_plugins_path, _plugins_temp_path):
+        os.remove(_plugins_temp_path + ".zip")
+        remove_file(f"{_plugins_path}/miaobot-plugins-main", f"{_plugins_path}/plugins")
+        shutil.rmtree(f"{_plugins_path}/miaobot-plugins-main")
 
-    threading.Thread(callback()).start()
+    threading.Thread(target=callback, args=(plugins_path, plugins_temp_path)).start()
