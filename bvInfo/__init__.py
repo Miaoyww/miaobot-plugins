@@ -86,7 +86,8 @@ async def _handle(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg(
                   f"{'w' if video_info['coin'] > 10000 else ''}硬币 · " \
                   f"{Decimal(video_info['favorite'] / 10000).quantize(Decimal('0.0')) if video_info['favorite'] > 10000 else video_info['favorite']}" \
                   f"{'w' if video_info['favorite'] > 10000 else ''}收藏"
-    text = f"————标题———— \n{video_info['title']}\n" \
+    text = f"https://www.bilibili.com/video/{bvid}" \
+           f"————标题———— \n{video_info['title']}\n" \
            f"————UP主———— \n{video_info['owner']} ({video_info['upload_time']}上传 -时长: {video_info['duration']})\n" \
            f"————信息———— \n{detail_text}\n" \
            f"————简介———— \n{video_info['desc']}" if video_info['desc'] != "" else None
