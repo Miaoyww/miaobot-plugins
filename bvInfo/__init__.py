@@ -44,7 +44,7 @@ async def _handle(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg(
     if matched_acode is None:
         return
 
-    if matched_acode[0:2] == "BV":
+    if matched_acode[0][0:2] == "BV":
         aid = bv2av(int(matched_acode[0].replace("BV", "")))
     else:
         aid = matched_acode[0]
