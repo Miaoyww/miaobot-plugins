@@ -47,7 +47,7 @@ async def _handle(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg(
     if matched_acode[0][0:2] == "BV":
         aid = bv2av(int(matched_acode[0].replace("BV", "")))
     else:
-        aid = matched_acode[0]
+        aid = matched_acode[0].replace("av", "")
 
     logger.info(f"得到aid: {aid}")
     response_body: dict
@@ -61,6 +61,7 @@ async def _handle(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg(
         return
     video_info = {
         "title": response_body["title"],
+        "bvid": response_body["bvid"],
         "cover_url": response_body["pic"],
         "upload_time": time.strftime("%Y/%m/%d %H:%M", time.localtime(response_body["pubdate"])),
         "duration": f"{response_body['duration'] // 60}:{response_body['duration'] - response_body['duration'] // 60 * 60}",
@@ -93,7 +94,7 @@ async def _handle(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg(
                   f"{'w' if video_info['coin'] > 10000 else ''}硬币 · " \
                   f"{Decimal(video_info['favorite'] / 10000).quantize(Decimal('0.0')) if video_info['favorite'] > 10000 else video_info['favorite']}" \
                   f"{'w' if video_info['favorite'] > 10000 else ''}收藏"
-    text = f"https://www.bilibili.com/video/av{aid}\n" \
+    text = f"https://www.bilibili.com/video/BV{video_info['bvid']}\n" \
            f"————标题———— \n{video_info['title']}\n" \
            f"————UP主———— \n{video_info['owner']} ({video_info['upload_time']}上传 -时长: {video_info['duration']})\n" \
            f"————信息———— \n{detail_text}\n" \
