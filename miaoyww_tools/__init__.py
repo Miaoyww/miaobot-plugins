@@ -5,9 +5,17 @@ from nonebot.plugin import on_command
 from nonebot.permission import SUPERUSER
 import os
 import shutil
+import nonebot
 import requests
 import zipfile
-import threading
+
+driver = nonebot.get_driver()
+
+
+@driver.on_bot_connect
+async def on_bot_connect():
+    pass
+
 
 update = on_command("upd", aliases={"更新", "update"}, permission=SUPERUSER)
 
@@ -47,4 +55,4 @@ async def update_handler(matcher: Matcher):
             break
         except:
             continue
-    await matcher.send("插件已更新完毕.")
+    await matcher.send("插件已更新完毕, bot即将重启")
