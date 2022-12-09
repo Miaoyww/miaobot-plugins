@@ -8,6 +8,7 @@ from nonebot.adapters.onebot.v11 import (
     MessageEvent,
     PrivateMessageEvent,
 )
+from nonebot.permission import SUPERUSER
 
 from .config import Config
 from .data_source import get_setu
@@ -15,7 +16,7 @@ from .data_source import get_setu
 setu_matcher = on_command(
     "setu",
     aliases={"来点涩图", "来点色图", "涩涩", "色色"},
-    permission=PRIVATE_FRIEND | GROUP,
+    permission=PRIVATE_FRIEND | SUPERUSER,
 )
 
 
