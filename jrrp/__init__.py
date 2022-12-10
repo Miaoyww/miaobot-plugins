@@ -2,6 +2,7 @@ import asyncio
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, GROUP, MessageSegment
 from nonebot.plugin import on_command, PluginMetadata
 from nonebot.params import CommandArg
+from nonebot.adapters.onebot.v11 import *
 from typing import List
 import time
 
