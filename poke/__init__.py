@@ -71,7 +71,7 @@ class CountLimiter:
         return False
 
 
-_clmt = CountLimiter(3)
+_clmt = CountLimiter(2)
 RECORD_PATH = Path(__file__).parent / "resources" / "record"
 poke_ = on_notice(priority=5, block=False)
 
@@ -119,6 +119,7 @@ async def _poke_event(event: PokeNotifyEvent):
         if _clmt.check(event.user_id) or random.random() < 0.3:
             rst = ""
             if random.random() < 0.15:
+                logger.info(f"{event.user_id} 的拍一拍回复被拒")
                 return
             await poke_.finish(rst + random.choice(poke__reply), at_sender=True)
         rand = random.random()
@@ -131,4 +132,6 @@ async def _poke_event(event: PokeNotifyEvent):
                 f'USER {event.user_id} 戳了戳我 回复: {result} \n {voice.split("_")[1]}'
             )
         else:
+            logger.info(f"戳了戳 {event.user_id}")
             await poke_.send(poke(event.user_id))
+    
