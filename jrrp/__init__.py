@@ -58,7 +58,7 @@ message: List[dict] = [
 
 
 @jrrp.handle()
-async def _h(event: GroupMessageEvent, args: Message = CommandArg():
+async def _h(event: GroupMessageEvent, args: Message = CommandArg()):
     if arg.extract_plain_text() != "":
         return
     qid = event.user_id
