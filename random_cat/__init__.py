@@ -3,8 +3,15 @@ from nonebot.adapters.onebot.v11.bot import Bot
 from nonebot.adapters.onebot.v11 import MessageSegment
 from nonebot.adapters.onebot.v11.event import Event
 import httpx
+from nonebot.plugin import PluginMetadata
 
 miao = on_command("cat", aliases={"jrcat", "今日猫猫", "猫猫"}, block=True, priority=5)
+
+__plugin_meta__ = PluginMetadata(
+    name='每日猫猫',
+    description='随机获取一只猫猫~',
+    usage='''使用方法: .cat'''
+)
 
 
 @miao.handle()

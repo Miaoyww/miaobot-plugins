@@ -1,13 +1,16 @@
 import asyncio
-
-from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, GROUP, Message, MessageSegment
-from nonebot.plugin import on_command
-from nonebot.params import CommandArg
+from nonebot.adapters.onebot.v11 import GroupMessageEvent, GROUP, MessageSegment
+from nonebot.plugin import on_command, PluginMetadata
 from typing import List
 import time
 
-
 jrrp = on_command("jrrp", permission=GROUP, priority=50)
+
+__plugin_meta__ = PluginMetadata(
+    name='今日人品',
+    description='每日人品',
+    usage='''使用方法: .jrrp'''
+)
 message: List[dict] = [
     {
         "expr": "jrrp == 100",

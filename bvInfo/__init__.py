@@ -9,8 +9,15 @@ from urllib import request
 from nonebot import on_command, logger
 from nonebot.params import CommandArg
 from nonebot.adapters.onebot.v11 import *
+from nonebot.plugin import PluginMetadata
 
 bvf = on_command("bvf", aliases={"bvinfo"})
+
+__plugin_meta__ = PluginMetadata(
+    name='Bilibili Video Info',
+    description='获取Bilibili视频的详情信息',
+    usage='''使用方法: .bvf <Bvid>|<Aid>'''
+)
 
 
 def bv2av(x: int):
