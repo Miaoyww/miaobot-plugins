@@ -20,7 +20,7 @@ __plugin_meta__ = PluginMetadata(
 )
 
 
-def bv2av(x: int):
+def bv2av(x):
     table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF'  # 码表
     tr = {}  # 反查码表
     # 初始化反查码表
@@ -82,10 +82,7 @@ async def _handle(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg(
         "owner": f"{response_body['owner']['name']}",
         "owner_face": f"{response_body['owner']['face']}"
     }
-    save_path = Path(__file__).parent / "img.png"
-    os.remove(save_path) if os.path.exists(save_path) else None
-    with open(save_path, 'wb') as w:
-        w.write(requests.get(video_info["cover_url"], headers=headers).content)
+    img_data = requests.get(video_info["cover_url"], headers=headers).content
     logger.debug("图像准备完成, 准备发送")
 
     if len(video_info['desc'].split("\n")) > 5:
@@ -107,6 +104,6 @@ async def _handle(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg(
            f"————信息———— \n{detail_text}\n" \
            f"————简介———— \n{video_info['desc']}" if video_info['desc'] != "" else None
 
-    image_message = MessageSegment.image(save_path)
+    image_message = MessageSegment.image(img_data)
     text_message = MessageSegment.text(text)
     await bot.send(event=event, message=(image_message + text_message))
