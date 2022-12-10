@@ -113,7 +113,7 @@ def poke(qq: int) -> MessageSegment:
 
 @poke_.handle()
 async def _poke_event(event: PokeNotifyEvent):
-    await asyncio.sleep(random.randint(2, 5))
+    await asyncio.sleep(random.randint(10, 20) / 10)
     if event.self_id == event.target_id:
         _clmt.add(event.user_id)
         if _clmt.check(event.user_id) or random.random() < 0.3:
@@ -122,7 +122,7 @@ async def _poke_event(event: PokeNotifyEvent):
                 return
             await poke_.finish(rst + random.choice(poke__reply), at_sender=True)
         rand = random.random()
-        if 0.1 < rand < 0.8:
+        if 0.4 < rand < 0.8:
             voice = random.choice(os.listdir(RECORD_PATH / "dinggong"))
             result = record(voice, "dinggong")
             await poke_.send(result)
