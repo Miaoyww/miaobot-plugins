@@ -108,11 +108,7 @@ def poke(qq: int) -> MessageSegment:
     参数:
         :param qq: qq号
     """
-    rand = random.random()
-    if 0.1 < rand < 0.4:
-        return MessageSegment("poke", {"qq": qq})
-    else:
-        return MessageSegment("poke")
+    return MessageSegment("poke", {"qq": qq})
 
 
 @poke_.handle()
@@ -126,7 +122,7 @@ async def _poke_event(event: PokeNotifyEvent):
                 return
             await poke_.finish(rst + random.choice(poke__reply), at_sender=True)
         rand = random.random()
-        if 0.1 < rand < 0.7:
+        if 0.1 < rand < 0.8:
             voice = random.choice(os.listdir(RECORD_PATH / "dinggong"))
             result = record(voice, "dinggong")
             await poke_.send(result)
