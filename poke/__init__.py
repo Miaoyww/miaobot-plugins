@@ -48,7 +48,24 @@ poke__reply = [
     "(´･ω･`)?",
     "...你干嘛..",
     "怎么啦?",
-    "草"
+    "草",
+    "戳我是吧...!(含住手指",
+    "!(后退",
+    "你!...",
+    "不要再戳了...",
+    "要被戳坏惹!",
+    "戳我干啥",
+    "爪巴",
+    "爬",
+    "再戳我的话...给你来一拳!",
+    "你...!你欺负我ヽ(*。>Д<)o゜",
+    "我...我...!(生气",
+    "甚么事? ヾ(•ω•`)o",
+    "戳...很好玩吗!",
+    "你不会期待我会有什么反应吧...hentai!",
+    "戳哪里呢...baka!",
+    "w(ﾟДﾟ)w",
+    "o((>ω< ))o"
 ]
 
 
@@ -71,7 +88,7 @@ class CountLimiter:
         return False
 
 
-_clmt = CountLimiter(3)
+_clmt = CountLimiter(2)
 RECORD_PATH = Path(__file__).parent / "resources" / "record"
 poke_ = on_notice(priority=5, block=False)
 
@@ -113,16 +130,17 @@ def poke(qq: int) -> MessageSegment:
 
 @poke_.handle()
 async def _poke_event(event: PokeNotifyEvent):
-    await asyncio.sleep(random.randint(2, 5))
+    await asyncio.sleep(random.randint(10, 20) / 10)
     if event.self_id == event.target_id:
         _clmt.add(event.user_id)
         if _clmt.check(event.user_id) or random.random() < 0.3:
             rst = ""
             if random.random() < 0.15:
+                logger.info(f"{event.user_id} 的拍一拍回复被拒")
                 return
             await poke_.finish(rst + random.choice(poke__reply), at_sender=True)
         rand = random.random()
-        if 0.1 < rand < 0.8:
+        if 0.4 < rand < 0.8:
             voice = random.choice(os.listdir(RECORD_PATH / "dinggong"))
             result = record(voice, "dinggong")
             await poke_.send(result)
@@ -131,4 +149,6 @@ async def _poke_event(event: PokeNotifyEvent):
                 f'USER {event.user_id} 戳了戳我 回复: {result} \n {voice.split("_")[1]}'
             )
         else:
+            logger.info(f"戳了戳 {event.user_id}")
             await poke_.send(poke(event.user_id))
+    

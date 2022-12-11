@@ -1,6 +1,8 @@
 import asyncio
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, GROUP, MessageSegment
 from nonebot.plugin import on_command, PluginMetadata
+from nonebot.params import CommandArg
+from nonebot.adapters.onebot.v11 import *
 from typing import List
 import time
 
@@ -57,7 +59,9 @@ message: List[dict] = [
 
 
 @jrrp.handle()
-async def _h(event: GroupMessageEvent):
+async def _h(event: GroupMessageEvent, args: Message = CommandArg()):
+    if args.extract_plain_text() != "":
+        return
     qid = event.user_id
     session = event.get_session_id()
     id = session.split('_')[2]
