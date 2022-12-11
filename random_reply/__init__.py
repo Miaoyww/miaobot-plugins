@@ -25,9 +25,9 @@ async def _(event: MessageEvent):
     text = str(event.message)
     nickname = event.sender.nickname
     user_id = event.sender.user_id
-    if not await check_text(text):
+    '''if not await check_text(text):
         logger.info(f"USER {user_id}|{nickname} 发送了违规文本 {text} 拒绝回复")
-        return
+        return'''
     result = await get_reply_result(text)
     if result is not None:
         await asyncio.sleep(random.randint(10, 20) / 10)
