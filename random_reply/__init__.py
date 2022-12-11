@@ -45,7 +45,7 @@ async def get_reply_result(text: str) -> str | None:
 async def check_text(text: str) -> bool:
     params = {"token": "DCPsDueVPz8mxfDn", "text": text}
     async with AsyncClient() as client:
-        data = (await client.post("https://v2.alapi.cn/api/censor/text", timeout=3, params=params)).json()
+        data = (await client.post("https://v2.alapi.cn/api/censor/text", timeout=10, params=params)).json()
         if data["code"] == 200:
             if data["data"]["conclusion_type"] == 2:
                 return False
