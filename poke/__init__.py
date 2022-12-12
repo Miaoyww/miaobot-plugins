@@ -27,7 +27,7 @@ __plugin_settings__ = {
     "cmd": ["戳一戳"],
 }
 
-poke__reply = json.load(open(Path(__file__).parent / "reply.json"))["replies"]
+poke__reply = json.load(open(Path(__file__).parent / "reply.json", encoding="utf-8"))["replies"]
 
 
 class CountLimiter:
@@ -112,4 +112,3 @@ async def _poke_event(event: PokeNotifyEvent):
         else:
             logger.info(f"戳了戳 {event.user_id}")
             await poke_.send(poke(event.user_id))
-    

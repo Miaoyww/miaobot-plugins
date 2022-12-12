@@ -12,7 +12,7 @@ replies = json.load(open(f"{Path(__file__).parent}/res/reply.json", "r", encodin
 voice_lst = os.listdir(f"{Path(__file__).parent}/res/dingzhen")
 
 
-def record(voice_name: str, path: str = None) -> MessageSegment or str:
+def record(voice_name: str, path: str = None) -> MessageSegment | None:
     """
     说明:
         生成一个 MessageSegment.record 消息
@@ -22,7 +22,7 @@ def record(voice_name: str, path: str = None) -> MessageSegment or str:
     """
     if len(voice_name.split(".")) == 1:
         voice_name += ".mp3"
-    file = (Path(__file__) / "res" / path / voice_name)
+    file = (Path(__file__).parent / "res" / path / voice_name)
     if file.exists():
         result = MessageSegment.record(f"file:///{file.absolute()}")
         return result
@@ -32,13 +32,16 @@ def record(voice_name: str, path: str = None) -> MessageSegment or str:
 
 
 async def get_reply_result(text: str) -> MessageSegment | None:
-    if result := get_special_reply_result(text) is not None:
+    result = await get_special_reply_result(text)
+    if result is not None:
         return result
     return get_text_reply_result(text)
 
 
 async def get_special_reply_result(text: str) -> MessageSegment | None:
     if f"{text}.mp3" not in voice_lst:
+        if "来点丁真" or "jrdz" or "dz" in text:
+            return record(random.choice(voice_lst), "dingzhen")
         return record(random.choice(await get_close_matches(text, voice_lst)), "dingzhen")
     else:
         return record(text, "dingzhen")
