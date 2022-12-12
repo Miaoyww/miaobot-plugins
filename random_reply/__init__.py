@@ -3,9 +3,19 @@ import json
 from pathlib import Path
 import random
 from httpx import *
-from nonebot import on_message, logger
+from nonebot import on_message, logger, on_command
 from nonebot.plugin import PluginMetadata
 from nonebot.adapters.onebot.v11 import *
+from nonebot import on_command, require
+from nonebot.adapters.onebot.v11 import (
+    GroupMessageEvent,
+    Message,
+    MessageEvent,
+    MessageSegment,
+)
+from nonebot.log import logger
+from nonebot.rule import to_me
+from data_source import *
 
 __plugin_meta__ = PluginMetadata(
     name='随机回复',
@@ -13,11 +23,7 @@ __plugin_meta__ = PluginMetadata(
     usage='''当你at bot并且回复一些话的时候，它会随机回复你'''
 )
 
-from nonebot.rule import to_me
-
-reply = on_message(rule=to_me())
-
-replies = json.load(open(Path(__file__).parent / "reply.json", "r", encoding='utf-8'))
+reply = on_message(rule=to_me(), permission=GROUP)
 
 
 @reply.handle()
@@ -33,21 +39,5 @@ async def _(event: MessageEvent):
         await asyncio.sleep(random.randint(10, 20) / 10)
         logger.info(f"USER {user_id}|{nickname} 发送了 {text} 其回复是 {result} ")
         await reply.finish(result)
-
-
-async def get_reply_result(text: str) -> str | None:
-    keys = replies.keys()
-    for key in keys:
-        if text.find(key) != -1:
-            return random.choice(replies[key])
-
-
-async def check_text(text: str) -> bool:
-    params = {"token": "DCPsDueVPz8mxfDn", "text": text}
-    async with AsyncClient() as client:
-        data = (await client.post("https://v2.alapi.cn/api/censor/text", params=params)).json()
-        if data["code"] == 200:
-            if data["data"]["conclusion_type"] == 2:
-                return False
-            else:
-                return True
+    else:
+        return
