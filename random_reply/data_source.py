@@ -40,7 +40,7 @@ async def get_reply_result(text: str) -> MessageSegment | None:
 
 async def get_special_reply_result(text: str) -> MessageSegment | None:
     if f"{text}.mp3" not in voice_lst:
-        if "来点丁真" or "jrdz" or "dz" in text:
+        if "来点丁真" in text:
             return record(random.choice(voice_lst), "dingzhen")
         else:
             return None
