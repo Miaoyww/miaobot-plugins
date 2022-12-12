@@ -8,7 +8,7 @@ from typing import Any
 from nonebot import logger
 from nonebot.adapters.onebot.v11 import MessageSegment
 
-replies = json.load(open(Path(__file__).parent / "reply.json", "r", encoding='utf-8'))
+replies = json.load(open(f"{Path(__file__).parent}/res/reply.json", "r", encoding='utf-8'))
 voice_lst = os.listdir(f"{Path(__file__).parent}/res/dingzhen")
 
 
