@@ -15,7 +15,7 @@ from nonebot.adapters.onebot.v11 import (
 )
 from nonebot.log import logger
 from nonebot.rule import to_me
-from data_source import *
+from .data_source import *
 
 __plugin_meta__ = PluginMetadata(
     name='随机回复',
