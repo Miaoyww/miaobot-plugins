@@ -32,18 +32,16 @@ def record(voice_name: str, path: str = None) -> MessageSegment | None:
 
 
 async def get_reply_result(text: str) -> MessageSegment | None:
-    result = await get_special_reply_result(text)
+    
+    result = await get_text_reply_result(text)
     if result is not None:
         return result
-    return get_text_reply_result(text)
+    return await get_special_reply_result(text)
 
 
 async def get_special_reply_result(text: str) -> MessageSegment | None:
     if f"{text}.mp3" not in voice_lst:
-        if "来点丁真" in text:
-            return record(random.choice(voice_lst), "dingzhen")
-        else:
-            return None
+        return record(random.choice(voice_lst), "dingzhen")
     else:
         return record(text, "dingzhen")
 
