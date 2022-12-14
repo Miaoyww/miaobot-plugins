@@ -6,13 +6,13 @@ import random
 from typing import Any
 
 from nonebot import logger
-from nonebot.adapters.onebot.v11 import MessageSegment
+from nonebot.adapters.onebot.v11 import MessageSegment, Message
 
 replies = json.load(open(f"{Path(__file__).parent}/res/reply.json", "r", encoding='utf-8'))
 voice_lst = os.listdir(f"{Path(__file__).parent}/res/dingzhen")
 
 
-def record(voice_name: str, path: str = None) -> MessageSegment | None:
+async def record(voice_name: str, path: str = None) -> MessageSegment | None:
     """
     说明:
         生成一个 MessageSegment.record 消息
@@ -31,19 +31,34 @@ def record(voice_name: str, path: str = None) -> MessageSegment | None:
         return None
 
 
-async def get_reply_result(text: str) -> MessageSegment | None:
-    
+async def get_reply_result(text: str) -> Message | MessageSegment | None:
     result = await get_text_reply_result(text)
     if result is not None:
         return result
     return await get_special_reply_result(text)
 
 
-async def get_special_reply_result(text: str) -> MessageSegment | None:
-    if f"{text}.mp3" not in voice_lst:
-        return record(random.choice(voice_lst), "dingzhen")
+async def get_special_reply_result(text: str) -> Message | MessageSegment | None:
+    rand = random.random()
+    if 0.3 < rand < 0.9:
+        if len(text.replace(" ", "")) == 0:
+            rand_choice = random.choice(replies[" "])
+            if type(rand_choice) is list:
+                rand_choice = random.choice(rand_choice)
+                if type(rand_choice) is dict:
+                    rply_text = MessageSegment.text(rand_choice["text"])
+                    rply_song = record(rand_choice["path"], "songs")
+                    return rply_text + await rply_song
+                else:
+                    return MessageSegment.text(rand_choice)
+            else:
+                return MessageSegment.text(rand_choice)
     else:
-        return record(text, "dingzhen")
+        if f"{text}.mp3" not in voice_lst:
+            matches = await get_close_matches(text, voice_lst)
+            return await record(random.choice(matches), "dingzhen") if len(matches) >= 1 else None
+        else:
+            return await record(text, "dingzhen")
 
 
 async def get_close_matches(arg: str, lst: list) -> list:
@@ -56,6 +71,10 @@ async def get_close_matches(arg: str, lst: list) -> list:
 
 
 async def get_text_reply_result(text: str) -> MessageSegment | None:
+    if len(text.replace(" ", "")) == 0:
+        return None
+    else:
+        text.replace(" ", "")
     keys = replies.keys()
     for key in keys:
         if text.find(key) != -1:
